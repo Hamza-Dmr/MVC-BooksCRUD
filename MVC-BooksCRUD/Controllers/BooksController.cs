@@ -1,113 +1,105 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVC_BooksCRUD.Models;
-using System.Linq;
 
-namespace MVC_BooksCRUD.Controllers
+public class BooksController : Controller
 {
-    public class BooksController : Controller
-    {
-        private readonly AppDbContext _context;
+    private readonly AppDbContext _context;
 
-        public BooksController(AppDbContext context)
-        {
-            _context = context;
-        }
+    public BooksController(AppDbContext context)
+    {
+        _context = context;
+    }
 
     
-        public IActionResult Index()
+    public IActionResult Index()
+    {
+        var books = _context.Books
+            .Include(x => x.Category)
+            .ToList();
+
+        return View(books);
+    }
+
+    
+    public IActionResult Add()
+    {
+        ViewBag.Categories = _context.Categories.ToList();
+        return View();
+    }
+
+    
+    [HttpPost]
+    public IActionResult Add(Book newBook)
+    {
+        Console.WriteLine("CATEGORY ID: " + newBook.CategoryId);
+
+        if (!ModelState.IsValid)
         {
-            var books = _context.Books.ToList();
-            return View(books);
+            ViewBag.Categories = _context.Categories.ToList();
+            return View(newBook);
         }
 
-        [HttpGet]
-        public IActionResult Add()
-        {
-            return View();
-        }
+        _context.Books.Add(newBook);
+        _context.SaveChanges();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Add(Book newBook)
-        {
-         
-            if (!ModelState.IsValid)
-            {
-                return View(newBook);
-            }
+        return RedirectToAction("Index");
+    }
+ 
+    public IActionResult Update(int id)
+    {
+        var book = _context.Books.Find(id);
 
-            _context.Books.Add(newBook);
-            _context.SaveChanges();
+        if (book == null)
+            return NotFound();
+
+        ViewBag.Categories = _context.Categories.ToList();
+
+        return View(book);
+    }
 
    
-            TempData["Success"] = "Kitap başarıyla eklendi";
-
-            return RedirectToAction("Index");
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Update(Book updatedBook)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Categories = _context.Categories.ToList(); 
+            return View(updatedBook);
         }
 
-     
-        [HttpGet]
-        public IActionResult Update(int id)
+        var book = _context.Books.Find(updatedBook.Id);
+
+        if (book == null)
+            return NotFound();
+
+        book.Title = updatedBook.Title;
+        book.Author = updatedBook.Author;
+        book.Price = updatedBook.Price;
+        book.Stock = updatedBook.Stock;
+        book.CategoryId = updatedBook.CategoryId;
+
+        _context.SaveChanges();
+
+        TempData["Message"] = "Kitap güncellendi";
+
+        return RedirectToAction("Index");
+    }
+
+   
+    public IActionResult Remove(int id)
+    {
+        var book = _context.Books.Find(id);
+
+        if (book != null)
         {
-            var book = _context.Books.FirstOrDefault(x => x.Id == id);
-
-         
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
-        }
-
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Update(Book updatedBook)
-        {
-    
-            if (!ModelState.IsValid)
-            {
-                return View(updatedBook);
-            }
-
-            var book = _context.Books.Find(updatedBook.Id);
-
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-     
-            book.Title = updatedBook.Title;
-            book.Author = updatedBook.Author;
-            book.Price = updatedBook.Price;
-            book.Stock = updatedBook.Stock;
-
-            _context.SaveChanges();
-
-            TempData["Success"] = "Kitap başarıyla güncellendi";
-
-            return RedirectToAction("Index");
-        }
-
-      
-        public IActionResult Remove(int id)
-        {
-            var book = _context.Books.Find(id);
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-
             _context.Books.Remove(book);
             _context.SaveChanges();
-
-            TempData["Success"] = "Kitap silindi";
-
-            return RedirectToAction("Index");
         }
+
+        TempData["Message"] = "Kitap silindi";
+
+        return RedirectToAction("Index");
     }
 }

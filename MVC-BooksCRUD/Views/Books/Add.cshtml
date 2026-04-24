@@ -1,36 +1,45 @@
 ﻿@model MVC_BooksCRUD.Models.Book
 
-<h2>Kitap Ekle</h2>
-
-<form asp-action="Add" method="post" class="form">
-
+<form asp-action="Add" method="post">
     @Html.AntiForgeryToken()
 
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="mb-3">
-        <label>Title</label>
+        <label>Başlık</label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label>Author</label>
+        <label>Yazar</label>
         <input asp-for="Author" class="form-control" />
         <span asp-validation-for="Author" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label>Price</label>
+        <label>Fiyat</label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label>Stock</label>
+        <label>Stok</label>
         <input asp-for="Stock" class="form-control" />
         <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
+
+    <div class="mb-3">
+        <label>Kategori</label>
+        <select asp-for="CategoryId" class="form-control">
+            <option value="0">Seçiniz</option>
+            @foreach (var cat in ViewBag.Categories)
+            {   
+                <option value="@cat.Id">@cat.Name</option>
+            }
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div> 
 
     <button type="submit" class="btn btn-success">Ekle</button>
 </form>

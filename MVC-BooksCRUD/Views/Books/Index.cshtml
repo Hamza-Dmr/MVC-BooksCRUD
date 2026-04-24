@@ -1,24 +1,22 @@
 ﻿@model List<MVC_BooksCRUD.Models.Book>
 
-<h2>Kitap Listesi</h2>
-
-@if (TempData["Success"] != null)
+@if (TempData["Message"] != null)
 {
     <div class="alert alert-success">
-        @TempData["Success"]
+        @TempData["Message"]
     </div>
 }
 
-<a asp-action="Add" class="btn btn-success mb-3">➕ Yeni Kitap</a>
+<a asp-action="Add" class="btn btn-success mb-3">+ Yeni Kitap Ekle</a>
 
-<table class="table table-bordered table-striped">
+<table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Price</th>
-            <th>Stock</th>
+            <th>Başlık</th>
+            <th>Yazar</th>
+            <th>Fiyat</th>
+            <th>Stok</th>
+            <th>Kategori</th>
             <th>İşlemler</th>
         </tr>
     </thead>
@@ -27,11 +25,12 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Id</td>
                 <td>@item.Title</td>
                 <td>@item.Author</td>
                 <td>@item.Price</td>
                 <td>@item.Stock</td>
+                <td>@item.Category?.Name</td>
+
                 <td>
                     <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Güncelle</a>
                     <a asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Sil</a>
