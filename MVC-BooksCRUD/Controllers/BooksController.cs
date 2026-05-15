@@ -63,6 +63,18 @@ public class BooksController : Controller
         return View(books.ToList());
     }
 
+    public IActionResult Details(int id)
+    {
+        var book = _context.Books
+            .Include(x => x.Category)
+            .FirstOrDefault(x => x.Id == id);
+
+        if (book == null)
+            return NotFound();
+
+        return View(book);
+    }
+
     public IActionResult Add()
     {
         ViewBag.Categories = _context.Categories.ToList();

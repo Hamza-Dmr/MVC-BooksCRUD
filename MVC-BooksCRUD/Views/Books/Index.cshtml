@@ -24,7 +24,7 @@
 
             @foreach (var cat in ViewBag.Categories)
             {
-                if (ViewBag.SelectedCategory == cat.Id)
+                if (ViewBag.CategoryId == cat.Id)
                 {
                     <option value="@cat.Id" selected>
                         @cat.Name
@@ -46,25 +46,59 @@
 
             <option value="">Sıralama Seç</option>
 
-            <option value="title_asc"
-                    selected="@(ViewBag.SortOrder == "title_asc")">
-                Başlık A-Z
-            </option>
+            @if (ViewBag.SortOrder == "title_asc")
+            {
+                <option value="title_asc" selected>Başlık A-Z</option>
+            }
+            else
+            {
+                <option value="title_asc">Başlık A-Z</option>
+            }
 
-            <option value="title_desc"
-                    selected="@(ViewBag.SortOrder == "title_desc")">
-                Başlık Z-A
-            </option>
+            @if (ViewBag.SortOrder == "title_desc")
+            {
+                <option value="title_desc" selected>Başlık Z-A</option>
+            }
+            else
+            {
+                <option value="title_desc">Başlık Z-A</option>
+            }
 
-            <option value="price_asc"
-                    selected="@(ViewBag.SortOrder == "price_asc")">
-                Fiyat Artan
-            </option>
+            @if (ViewBag.SortOrder == "price_asc")
+            {
+                <option value="price_asc" selected>Fiyat Artan</option>
+            }
+            else
+            {
+                <option value="price_asc">Fiyat Artan</option>
+            }
 
-            <option value="price_desc"
-                    selected="@(ViewBag.SortOrder == "price_desc")">
-                Fiyat Azalan
-            </option>
+            @if (ViewBag.SortOrder == "price_desc")
+            {
+                <option value="price_desc" selected>Fiyat Azalan</option>
+            }
+            else
+            {
+                <option value="price_desc">Fiyat Azalan</option>
+            }
+
+            @if (ViewBag.SortOrder == "stock_asc")
+            {
+                <option value="stock_asc" selected>Stok Artan</option>
+            }
+            else
+            {
+                <option value="stock_asc">Stok Artan</option>
+            }
+
+            @if (ViewBag.SortOrder == "stock_desc")
+            {
+                <option value="stock_desc" selected>Stok Azalan</option>
+            }
+            else
+            {
+                <option value="stock_desc">Stok Azalan</option>
+            }
 
         </select>
     </div>
@@ -111,6 +145,12 @@
                 <td>@item.Category?.Name</td>
 
                 <td>
+
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id"
+                       class="btn btn-info btn-sm">
+                        Detay
+                    </a>
 
                     <a asp-action="Update"
                        asp-route-id="@item.Id"

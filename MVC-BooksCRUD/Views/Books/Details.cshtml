@@ -1,0 +1,40 @@
+﻿@model MVC_BooksCRUD.Models.Book
+
+<h2 class="mb-4">Kitap Detayı</h2>
+
+<div class="card p-4">
+
+    <h4>@Model.Title</h4>
+
+    <hr />
+
+    <p>
+        <strong>Id:</strong>
+        @Model.Id
+    </p>
+
+    <p>
+        <strong>Yazar:</strong>
+        @Model.Author
+    </p>
+
+    <p>
+        <strong>Fiyat:</strong>
+        @Model.Price
+    </p>
+
+    <p>
+        <strong>Stok:</strong>
+        @Model.Stock
+    </p>
+
+    <p>
+        <strong>Kategori:</strong>
+        @Model.Category?.Name
+    </p>
+
+    <a asp-action="Index" class="btn btn-primary mt-3">
+        Listeye Dön
+    </a>
+
+</div>
